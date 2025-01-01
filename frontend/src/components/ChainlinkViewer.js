@@ -1,29 +1,35 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-function ChainlinkViewer() {
-    const [data, setData] = useState(null);
+const ChainlinkViewer = () => {
+    const [prices, setPrices] = useState({ btc: 'Loading...', eth: 'Loading...' });
 
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('/chainlink'); // Backend API 호출
-            setData(response.data);
-        } catch (error) {
-            console.error('Error fetching Chainlink data:', error);
-        }
-    };
+    useEffect(() => {
+        const socket = new WebSocket('ws://172.30.1.60:4000'); // Connect to backend WebSocket
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            setPrices({
+                btc: data.btc || 'N/A',
+                eth: data.eth || 'N/A',
+            });
+        };
+
+        // Clean up WebSocket connection on component unmount
+        return () => socket.close();
+    }, []);
 
     return (
         <div>
-            <button onClick={fetchData}>View Chainlink Data</button>
-            {data && (
-                <pre style={{ textAlign: 'left', backgroundColor: '#f4f4f4', padding: '10px' }}>
-                    {JSON.stringify(data, null, 2)}
-                </pre>
-            )}
+            <h2>Real-Time Cryptocurrency Prices</h2>
+            <div>
+                <strong>BTC/USD:</strong> {prices.btc}
+            </div>
+            <div>
+                <strong>ETH/USD:</strong> {prices.eth}
+            </div>
         </div>
     );
-}
+};
 
 export default ChainlinkViewer;
 

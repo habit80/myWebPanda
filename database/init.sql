@@ -1,0 +1,18 @@
+CREATE TABLE recorded_data (
+    id SERIAL PRIMARY KEY,
+    data TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE chainlink_data (
+    id SERIAL PRIMARY KEY,
+    data JSONB NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE anonymous_records (
+    id SERIAL PRIMARY KEY,
+    record TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+

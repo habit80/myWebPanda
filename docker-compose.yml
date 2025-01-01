@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"  # 로컬의 3000 포트를 컨테이너의 3000 포트에 매핑
+    volumes:
+      - ./frontend:/app           # 로컬의 frontend 디렉토리를 컨테이너의 /app에 바인드 마운트
+      - /app/node_modules         # node_modules는 제외 (컨테이너 내부 디렉토리 사용)
+      - /app/node_modules/.cache  # 추가: 캐시 디렉토리 제외 (바인드 마운트 중 권한문제 생겨서..)
+    depends_on:
+      - backend                   # backend 서비스가 먼저 실행되도록 설정
+    networks:
+      - app-network
+    command: npm start            # React 개발 서버 실행
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "4000:4000"               # 로컬의 4000 포트를 컨테이너의 4000 포트에 매핑
+    environment:
+      - DB_HOST=database
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=chainmonitor
+    volumes:
+      - ./backend:/app            # 로컬의 backend 디렉토리를 컨테이너의 /app에 바인드 마운트
+      - /app/node_modules         # node_modules는 제외
+    user: "node"                  # 컨테이너 내부에서 "node" 사용자로 실행
+    depends_on:
+      - database                  # database 서비스가 먼저 실행되도록 설정
+    networks:
+      - app-network
+    command: npm run dev          # 백엔드 개발 서버 실행 (dev 모드로 실행)
+
+  database:
+    image: postgres:13            # PostgreSQL 13 이미지 사용
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chainmonitor
+    ports:
+      - "5432:5432"               # 로컬의 5432 포트를 컨테이너의 5432 포트에 매핑
+    volumes:
+      - database-data:/var/lib/postgresql/data  # 데이터 영구 저장
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql  # 초기화 스크립트
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  database-data:
+

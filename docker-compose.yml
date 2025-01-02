@@ -64,10 +64,63 @@ services:
     networks:
       - app-network
 
+  bitcoind:
+    image: jvstein/bitcoin-test-node:latest
+    command:
+      - bitcoind
+      - -prune=550
+      - -printtoconsole
+      - -conf=/etc/bitcoin/bitcoin.conf
+        #- -d                       # 데몬 모드로 실행 
+    volumes:
+      - ./bitcoin-prometheus-exporter/test-bitcoin.conf:/etc/bitcoin/bitcoin.conf
+    networks:
+      - app-network
+
+  prometheus:
+    build:
+      context: ./prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-cors"  # CORS 허용 옵션 추가 - grafana
+    networks:
+      - app-network
+
+  exporter:
+    image: jvstein/bitcoin-prometheus-exporter:latest
+    build: ./bitcoin-prometheus-exporter
+    ports:
+      - "9332:9332"
+    environment:
+      BITCOIN_RPC_HOST: bitcoind
+      BITCOIN_RPC_USER: "alice"
+      BITCOIN_RPC_PASSWORD: "password=123&z!=@e"
+      #BITCOIN_CONF_PATH: /etc/bitcoin/bitcoin.conf
+      REFRESH_SECONDS: 1
+      LOG_LEVEL: "INFO"
+    depends_on:
+      - bitcoind
+    networks:
+      - app-network
+
+  grafana:
+    build:
+      context: ./grafana
+    ports:
+      - "3000:3000"  # 호스트의 3000 포트를 컨테이너의 3000 포트로 매핑
+    volumes:
+      - grafana-data:/var/lib/grafana  # 데이터 영구 저장
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   database-data:
-
+  grafana-data:

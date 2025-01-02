@@ -9,7 +9,7 @@ spec:
     app: mywebpanda-frontend
   ports:
     - protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 2020
+      targetPort: 2020
   type: LoadBalancer
 

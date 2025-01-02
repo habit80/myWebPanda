@@ -17,4 +17,4 @@ spec:
       - name: mywebpanda-frontend
         image: mywebpanda-frontend:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 2020

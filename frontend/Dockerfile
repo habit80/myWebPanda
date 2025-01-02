@@ -17,7 +17,7 @@ RUN mkdir -p /app/node_modules/.cache && chmod -R 777 /app/node_modules/.cache
 COPY . .
 
 # Expose the development server port
-EXPOSE 3000
+EXPOSE 2020
 
 # Start the React development server
 CMD ["npm", "start"]

@@ -5,7 +5,7 @@ logs
 
 # Dependency directories
 node_modules
-
+venv
 
 # Environment variables
 .env

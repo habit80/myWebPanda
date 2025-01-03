@@ -1,0 +1,6 @@
+flask==0.12.2
+requests==2.18.4
+pycryptodome
+Jinja2<3.1.0
+flask_cors
+

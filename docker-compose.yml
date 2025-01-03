@@ -88,7 +88,8 @@ services:
 
   exporter:
     image: jvstein/bitcoin-prometheus-exporter:latest
-    build: ./bitcoin-prometheus-exporter
+    build:
+      context: ./bitcoin-prometheus-exporter
     ports:
       - "9332:9332"
     environment:

@@ -10,15 +10,22 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
-# Set permissions for the node_modules cache
-RUN mkdir -p /app/node_modules/.cache && chmod -R 777 /app/node_modules/.cache
+# Ensure the target directory exists
+RUN mkdir -p /app/node_modules/react-scripts/config/
+
+# Copy the custom config file (replace existing one)
+COPY docker/custom-config/webpackDevServer.config.js /app/node_modules/react-scripts/config/webpackDevServer.config.js
+
+# Log the contents of the copied file
+RUN echo "Contents of webpackDevServer.config.js:" && \
+    cat /app/node_modules/react-scripts/config/webpackDevServer.config.js
 
 # Copy the application source code
 COPY . .
 
-# Expose the development server port
-EXPOSE 2020
+# Expose the necessary port
+EXPOSE 3000
 
-# Start the React development server
+# Start the application
 CMD ["npm", "start"]
 

@@ -4,9 +4,12 @@ const ChainlinkViewer = () => {
     const [prices, setPrices] = useState({ btc: 'Loading...', eth: 'Loading...' });
 
     useEffect(() => {
-        const socket = new WebSocket('ws://172.30.1.60:4000'); // Connect to backend WebSocket
+        // WebSocket 엔드포인트를 wss://로 변경
+        //const ws = new WebSocket('wss://3.37.183.148:4000');
+        //const ws = new WebSocket('wss://3.37.183.148:4000');
+	const ws = new WebSocket('wss://habit80.com/ws/'); // Nginx 프록시 경로
 
-        socket.onmessage = (event) => {
+        ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             setPrices({
                 btc: data.btc || 'N/A',
@@ -14,19 +17,18 @@ const ChainlinkViewer = () => {
             });
         };
 
-        // Clean up WebSocket connection on component unmount
-        return () => socket.close();
+        ws.onclose = () => {
+            console.error('WebSocket closed');
+        };
+
+        return () => ws.close();
     }, []);
 
     return (
         <div>
-            <h2>Real-Time Cryptocurrency Prices</h2>
-            <div>
-                <strong>BTC/USD:</strong> {prices.btc}
-            </div>
-            <div>
-                <strong>ETH/USD:</strong> {prices.eth}
-            </div>
+            <h1>Chainlink Prices</h1>
+            <p>BTC: {prices.btc}</p>
+            <p>ETH: {prices.eth}</p>
         </div>
     );
 };

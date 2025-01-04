@@ -29,6 +29,7 @@ services:
     command: npm start            # React 개발 서버 실행
     environment:
       - PORT=2020
+      - PUBLIC=https://habit80.com  # HTTPS URL 사용
 
   backend:
     build:

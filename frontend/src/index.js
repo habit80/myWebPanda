@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css'; // 선택: 스타일 파일
 import App from './App'; // App 컴포넌트 불러오기
 import BlockchainFrames from './components/BlockchainFrames';
+import GrafanaPanels from './components/GrafanaPanels';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,6 +16,11 @@ ReactDOM.render(
       {/* BlockchainFrames 영역 */}
       <div style={{ flex: 2 }}>
         <BlockchainFrames />
+      </div>
+
+      {/* BlockchainFrames 영역 */}
+      <div style={{ flex: 2 }}>
+        <GrafanaPanels />
       </div>
     </div>
   </React.StrictMode>,

@@ -19,7 +19,8 @@ services:
     ports:
       - "2020:2020"  # 로컬의 2020 포트를 컨테이너의 2020 포트에 매핑
       - "5000:5000"  # Flask 서버 포트 매핑
-      - "5001:5001"  # Flask 클라이언트 포트 매핑
+      - "5001:5001"  # Flask 클라이언트1 포트 매핑
+      - "5002:5002"  # Flask 클라이언트2 포트 매핑
     volumes:
       - ./frontend:/app           # 로컬의 frontend 디렉토리를 컨테이너의 /app에 바인드 마운트
       - /app/node_modules         # node_modules는 제외 (컨테이너 내부 디렉토리 사용)

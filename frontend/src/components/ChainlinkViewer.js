@@ -19,15 +19,18 @@ const ChainlinkViewer = () => {
     }, []);
 
     return (
-        <div>
-            <h2>체인링크로 가져오는 실시간 시세</h2>
+	    <div>
+            <h2>Binance 실시간 시세</h2>
             <div>
-                <strong>BTC/USD: $</strong> {prices.btc}
+                <strong>BTC/USD: $  </strong>
+                <span style={{ color: '#FF8C00', fontWeight: 'bold' }}>{prices.btc}</span> {/* 주황색 스타일 */}
             </div>
             <div>
-                <strong>ETH/USD: $</strong> {prices.eth}
+                <strong>ETH/USD: $  </strong>
+                <span style={{ color: '#FF8C00', fontWeight: 'bold' }}>{prices.eth}</span> {/* 주황색 스타일 */}
             </div>
         </div>
+
     );
 };
 

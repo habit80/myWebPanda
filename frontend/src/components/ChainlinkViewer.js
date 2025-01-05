@@ -20,12 +20,12 @@ const ChainlinkViewer = () => {
 
     return (
         <div>
-            <h2>Real-Time Cryptocurrency Prices</h2>
+            <h2>체인링크로 가져오는 실시간 시세</h2>
             <div>
-                <strong>BTC/USD:</strong> {prices.btc}
+                <strong>BTC/USD: $</strong> {prices.btc}
             </div>
             <div>
-                <strong>ETH/USD:</strong> {prices.eth}
+                <strong>ETH/USD: $</strong> {prices.eth}
             </div>
         </div>
     );

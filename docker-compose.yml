@@ -18,6 +18,8 @@ services:
       context: ./frontend
     ports:
       - "2020:2020"  # 로컬의 2020 포트를 컨테이너의 2020 포트에 매핑
+      - "5000:5000"  # Flask 서버 포트 매핑
+      - "5001:5001"  # Flask 클라이언트 포트 매핑
     volumes:
       - ./frontend:/app           # 로컬의 frontend 디렉토리를 컨테이너의 /app에 바인드 마운트
       - /app/node_modules         # node_modules는 제외 (컨테이너 내부 디렉토리 사용)
@@ -26,7 +28,7 @@ services:
       - backend                   # backend 서비스가 먼저 실행되도록 설정
     networks:
       - app-network
-    command: npm start            # React 개발 서버 실행
+    #command: /app/entrypoint.sh           # React 개발 서버 & Flask 실행
     environment:
       - PORT=2020
 
@@ -61,15 +63,6 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data  # 데이터 영구 저장
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql  # 초기화 스크립트
-    networks:
-      - app-network
-
-  blockchain-python:
-    build:
-      context: ./blockchain-python
-    ports:
-      - "5000:5000"
-      - "5001:5001"
     networks:
       - app-network
 

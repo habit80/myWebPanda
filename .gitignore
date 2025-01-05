@@ -2,6 +2,7 @@
 a.txt
 logs
 *.log
+*.patch
 
 # Dependency directories
 node_modules

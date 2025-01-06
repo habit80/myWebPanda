@@ -67,6 +67,27 @@ services:
     networks:
       - app-network
 
+#  bitcoind:
+#    image: jvstein/bitcoin-test-node:latest
+#    command:
+#      - bitcoind
+#      - -prune=550
+#      - -printtoconsole
+#      - -conf=/etc/bitcoin/bitcoin.conf
+#        #- -d                       # 데몬 모드로 실행
+#    volumes:
+#      - ./bitcoin-prometheus-exporter/test-bitcoin.conf:/etc/bitcoin/bitcoin.conf
+#    networks:
+#      - app-network
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.0"       # 최대 2개의 CPU 코어 사용
+#          memory: "1g"      # 최대 2GB 메모리 사용
+#        reservations:
+#          cpus: "0.5"       # 최소 0.5개의 CPU 코어 보장
+#          memory: "512m"    # 최소 512MB 메모리 보장
+
   prometheus:
     build:
       context: ./prometheus
@@ -93,8 +114,8 @@ services:
       #BITCOIN_CONF_PATH: /etc/bitcoin/bitcoin.conf
       REFRESH_SECONDS: 1
       LOG_LEVEL: "INFO"
-#    depends_on:
-#      - bitcoind
+#  depends_on:
+#     - bitcoind                  # bitcoind 서비스가 먼저 실행되도록 설정
     networks:
       - app-network
 

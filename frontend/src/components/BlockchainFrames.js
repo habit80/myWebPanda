@@ -13,7 +13,7 @@ const BlockchainFrames = () => {
                 }}
             >
                 <iframe
-                    src="http://172.30.1.60:5000"
+                    src="http://localhost:5000"
                     style={{ width: '100%', height: '100%', border: 'none' }}
                     title="Blockchain Server"
                 />
@@ -37,7 +37,7 @@ const BlockchainFrames = () => {
                         Blockchain Node #1
                     </h3>
                     <iframe
-                        src="http://172.30.1.60:5001"
+                        src="http://localhost:5001"
                         style={{ width: '100%', height: 'calc(100% - 30px)', border: 'none' }}
                         title="Blockchain Client #1"
                     />
@@ -59,7 +59,7 @@ const BlockchainFrames = () => {
                         Blockchain Node #2
                     </h3>
                     <iframe
-                        src="http://172.30.1.60:5002"
+                        src="http://localhost:5002"
                         style={{ width: '100%', height: 'calc(100% - 30px)', border: 'none' }}
                         title="Blockchain Client #2"
                     />

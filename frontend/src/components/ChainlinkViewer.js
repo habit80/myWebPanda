@@ -4,7 +4,7 @@ const ChainlinkViewer = () => {
     const [prices, setPrices] = useState({ btc: 'Loading...', eth: 'Loading...' });
 
     useEffect(() => {
-        const socket = new WebSocket('ws://172.30.1.60:4000'); // Connect to backend WebSocket
+        const socket = new WebSocket('ws://localhost:4000'); // Connect to backend WebSocket
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);

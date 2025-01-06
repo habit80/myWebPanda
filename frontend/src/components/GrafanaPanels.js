@@ -6,7 +6,7 @@ const GrafanaPanels = () => {
             {/* Chain Branches Panel */}
             <iframe
                 //src="http://172.30.1.60:3000"
-                src="http://172.30.1.60:3000/"
+                src="http://localhost:3000/"
                 width="100%"
                 height="800px"
                 frameBorder="0"

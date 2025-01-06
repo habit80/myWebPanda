@@ -1,0 +1,29 @@
+# backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mywebpanda-backend
+  template:
+    metadata:
+      labels:
+        app: mywebpanda-backend
+    spec:
+      containers:
+      - name: mywebpanda-backend
+        image: mywebpanda-backend:latest
+        ports:
+        - containerPort: 4000
+        env:
+        - name: DATABASE_HOST
+          value: "postgres-service"
+        - name: DATABASE_USER
+          value: "user"
+        - name: DATABASE_PASSWORD
+          value: "password"
+        - name: DATABASE_NAME
+          value: "mywebpanda"

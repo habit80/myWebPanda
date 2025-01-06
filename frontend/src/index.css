@@ -11,3 +11,28 @@ body {
     height: 100vh;
 }
 
+nav {
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 15px 10px;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button {
+    margin: 0 15px;
+    padding: 10px 20px;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: #007BFF; /* 파란색 기본 */
+}
+
+.nav-button:hover {
+    background-color: #0056b3; /* 호버 시 진한 파란색 */
+}
+

@@ -1,11 +1,26 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: my-nginx
+    ports:
+      - "80:80"  # 호스트의 8080번 포트를 컨테이너의 80번 포트에 매핑
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # 커스텀 nginx 설정 파일을 사용
+    networks:
+      - app-network
+    depends_on:
+      - frontend  # frontend starts first
+
   frontend:
     build:
       context: ./frontend
     ports:
-      - "3000:3000"  # 로컬의 3000 포트를 컨테이너의 3000 포트에 매핑
+      - "2020:2020"  # 로컬의 2020 포트를 컨테이너의 2020 포트에 매핑
+      - "5000:5000"  # Flask 서버 포트 매핑
+      - "5001:5001"  # Flask 클라이언트1 포트 매핑
+      - "5002:5002"  # Flask 클라이언트2 포트 매핑
     volumes:
       - ./frontend:/app           # 로컬의 frontend 디렉토리를 컨테이너의 /app에 바인드 마운트
       - /app/node_modules         # node_modules는 제외 (컨테이너 내부 디렉토리 사용)
@@ -14,7 +29,9 @@ services:
       - backend                   # backend 서비스가 먼저 실행되도록 설정
     networks:
       - app-network
-    command: npm start            # React 개발 서버 실행
+    #command: /app/entrypoint.sh           # React 개발 서버 & Flask 실행
+    environment:
+      - PORT=2020
 
   backend:
     build:
@@ -50,10 +67,77 @@ services:
     networks:
       - app-network
 
+#  bitcoind:
+#    image: jvstein/bitcoin-test-node:latest
+#    command:
+#      - bitcoind
+#      - -prune=550
+#      - -printtoconsole
+#      - -conf=/etc/bitcoin/bitcoin.conf
+#        #- -d                       # 데몬 모드로 실행
+#    volumes:
+#      - ./bitcoin-prometheus-exporter/test-bitcoin.conf:/etc/bitcoin/bitcoin.conf
+#    networks:
+#      - app-network
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "2.0"       # 최대 2개의 CPU 코어 사용
+#          memory: "1g"      # 최대 2GB 메모리 사용
+#        reservations:
+#          cpus: "0.5"       # 최소 0.5개의 CPU 코어 보장
+#          memory: "512m"    # 최소 512MB 메모리 보장
+
+  prometheus:
+    build:
+      context: ./prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-cors"  # CORS 허용 옵션 추가 - grafana
+    networks:
+      - app-network
+
+  exporter:
+    image: jvstein/bitcoin-prometheus-exporter:latest
+    build:
+      context: ./bitcoin-prometheus-exporter
+    ports:
+      - "9332:9332"
+    environment:
+      BITCOIN_RPC_HOST: bitcoind
+      BITCOIN_RPC_USER: "alice"
+      BITCOIN_RPC_PASSWORD: "password=123&z!=@e"
+      #BITCOIN_CONF_PATH: /etc/bitcoin/bitcoin.conf
+      REFRESH_SECONDS: 1
+      LOG_LEVEL: "INFO"
+#  depends_on:
+#     - bitcoind                  # bitcoind 서비스가 먼저 실행되도록 설정
+    networks:
+      - app-network
+
+  grafana:
+    build:
+      context: ./grafana
+    ports:
+      - "3000:3000"  # 호스트의 3000 포트를 컨테이너의 3000 포트로 매핑
+    networks:
+      - app-network
+    user: "0:0"  # root 사용자로 실행
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_HTTP_ENABLE_CORS=true
+    volumes:
+      #- ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - grafana-data:/var/lib/grafana  # 데이터 영구 저장
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   database-data:
-
+  grafana-data:

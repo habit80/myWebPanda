@@ -1,24 +1,32 @@
-# Use Node.js base image
-FROM node:16
+# Use a lightweight base image
+FROM python:3.9-slim
+
+# Install Node.js
+RUN apt-get update && apt-get install -y nodejs npm
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the package files
+# Copy package files and install dependencies
 COPY package.json package-lock.json ./
-
-# Install dependencies
 RUN npm install
 
-# Set permissions for the node_modules cache
-RUN mkdir -p /app/node_modules/.cache && chmod -R 777 /app/node_modules/.cache
-
-# Copy the application source code
+# Copy all source files, including entrypoint.sh
 COPY . .
 
-# Expose the development server port
-EXPOSE 3000
+# Install Python dependencies
+RUN pip install --no-cache-dir -r ./src/blockchain-python/requirements.txt
+RUN pip install Flask --upgrade
 
-# Start the React development server
-CMD ["npm", "start"]
+# Prepare logs directory
+RUN mkdir -p /app/logs && chmod -R 777 /app/logs
+
+# Ensure entrypoint.sh has execution permissions
+RUN chmod +x /app/entrypoint.sh
+
+# Expose required ports
+EXPOSE 2020 5000 5001
+
+# Run the entrypoint script
+CMD ["/app/entrypoint.sh"]
 
